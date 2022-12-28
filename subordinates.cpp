@@ -9,34 +9,19 @@ using namespace std;
 #define int long long int
 #define endl "\n"
 
+vector<int> adj[(int)2e5+1];
 
-#define N ((1<<18)+5)
+int subordinates[(int)2e5+1];
 
-int n;
-int freq[N];
 
-void solve(){
-	cin>>n;
-	memset(freq, 0, sizeof(freq));
+int dfs(int node){
 
-	int x=0, y;
-	freq[0]=1;
-	int ans=n*(n+1)/2;
-	for(int i=0;i<n;i++){
-		cin>>y;
-		x^=y;
-
-		for(int j=0;j<(1<<9);j++){
-			ans-=freq[(j*j)^x];
-		}	
-
-		freq[x]++;
+	for(int child: adj[node]){
+		subordinates[node]+=dfs(child);
 	}
 
-	cout<<ans<<"\n";
-
+	return subordinates[node]+1;
 }
-
 
 int32_t main(){
 
@@ -47,10 +32,15 @@ int32_t main(){
 	ios_base::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
 
-	int t; cin>>t;
-	while(t--){
-		solve();
+	int n; cin>>n;
+
+	for(int i=2;i<=n;i++){
+		int x; cin>>x;
+		adj[x].push_back(i);
 	}
-	
+
+	dfs(1);
+
+	for(int i=1;i<=n;i++)cout<<subordinates[i]<<" ";	
 	return 0;
 }
