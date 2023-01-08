@@ -1,46 +1,44 @@
+/*
+	author: akhilendra11
+*/
+
+
 #include<bits/stdc++.h>
 using namespace std;
 
 #define int long long int
 #define endl "\n"
 
-
+string s;
+const int n=48;
 
 int vis[8][8];
 
-int solve(char* s, int idx, int i, int j){
-	if(i<1 or i>7 or j<1 or j>7)return 0;
-	if(vis[i][j]==1)return 0;
-	if(i==7 and j==1){
-		if(idx==48)return 1;
+int f(int i, int j, int idx){
+	if(vis[i][j]){	
 		return 0;
 	}
-	
+	if(i==7 and j==1 and idx==48){
+		return 1;
+	}
+	if(i==0 or j==0 or i==8 or j==8 or idx==48)return 0;
+
+
 	vis[i][j]=1;
-	int cnt=0;
 
-	if(s[idx]=='?'){
-		cnt+=solve(s, idx+1, i, j+1);
-		cnt+=solve(s, idx+1, i, j-1);
-		cnt+=solve(s, idx+1, i+1, j);
-		cnt+=solve(s, idx+1, i-1, j);
-	}
-	else{
-		if(s[idx]=='R')cnt+=solve(s, idx+1, i, j+1);
-		if(s[idx]=='L')cnt+=solve(s, idx+1, i, j-1);
-		if(s[idx]=='D')cnt+=solve(s, idx+1, i+1, j);
-		if(s[idx]=='U')cnt+=solve(s, idx+1, i-1, j);
+	int ans=0;
 
-	}
+	if(s[idx]=='L')ans=f(i, j-1, idx+1);
+	if(s[idx]=='U')ans=f(i-1, j, idx+1);
+	if(s[idx]=='R')ans=f(i, j+1, idx+1);
+	if(s[idx]=='D')ans=f(i+1, j, idx+1);
+
+	if(s[idx]=='?')ans=f(i, j-1, idx+1)+f(i-1, j, idx+1)+f(i, j+1, idx+1)+f(i+1, j, idx+1);
+
 	vis[i][j]=0;
-	return cnt;
+	return ans;
+
 }
-
-
-
-
-
-
 
 
 
@@ -53,11 +51,11 @@ int32_t main(){
 	ios_base::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
 
-    for(int i=0;i<=7;i++)for(int j=0;j<=7;j++)vis[i][j]=0;
-  
-	char s[48];
+
 	cin>>s;
-	solve(s, 0, 1, 1);
+
+
+	cout<<f(1, 1, 0);
 	
 	return 0;
 }
