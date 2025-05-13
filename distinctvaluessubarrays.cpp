@@ -20,10 +20,32 @@ template<typename typC> ostream &operator<<(ostream &cout,const vector<typC> &a)
 const int inf{(int)1e18};
 const int mod{(int)1e9+7};
 const double PI{(double)acos(-1)};
-const bool testcases{true};
+const bool testcases{false};
 
 void solve(){
-  
+  int n;
+  cin>>n;
+
+  vi a(n);
+  cin>>a;
+
+
+  int i{}, j{}, ans{};
+
+  set<int> st;
+
+  while(i<n or j<n){
+    while(j<n){
+      if(st.find(a[j])!=st.end())break;
+      st.insert(a[j++]);
+    }
+    ans+=j-i;
+    st.erase(a[i]);
+    i++;
+    if(i>j)i=j;
+  }
+
+  cout<<ans<<"\n";
 }
 
 int32_t main(){
