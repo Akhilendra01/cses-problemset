@@ -92,3 +92,46 @@ int32_t main(){
   
   return 0;
 }
+
+class Line{
+public:
+  double x, y;
+  int m, c;
+  Line(double x, int m, int c): x(x), m(m), c(c){
+    this->y=m*x+c;
+  }
+  double calculate(int x_pt){
+    return m*x_pt+c;
+  }
+};
+
+class ConvexHull{
+private:
+  vector<Line*> hull;
+public:
+  void insert(int m, int c){
+    while(!hull.empty()){
+      Line *l{hull.back()};
+      if(l->y > m*l->x+c){
+        if(m-l->m)hull.push_back(new Line( -(l->c-c)*1.0/(l->m-m)  ,m, c));
+        return;
+      }
+      delete l;
+      hull.pop_back();
+    }
+    hull.push_back(new Line(-inf, m, c));
+  }
+
+  int query(int x){
+    Line *l {*--upper_bound(entire(hull), x, 
+      [](int a, Line *l)->bool{
+        return a<l->x;
+      }
+    )};
+    return l->calculate(x);
+  }
+
+  ~ConvexHull(){
+    for(Line *l: hull)delete l;
+  }
+};
